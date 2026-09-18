@@ -195,6 +195,7 @@ def start_servers(options, threads):
         c.setLootdir(options.lootdir)
         c.setOutputFile(options.output_file)
         c.setdumpHashes(options.dump_hashes)
+        c.setDumpLSA(options.dump_lsa)
         c.setLDAPOptions(options.no_dump, options.no_da, options.no_acl, options.no_validate_privs, options.escalate_user, options.add_computer, options.delegate_access, options.dump_laps, options.dump_gmsa, options.dump_adcs, options.sid, options.add_dns_record, options.dump_info_attr, options.dump_pre2k)
         c.setRPCOptions(options.rpc_mode, options.rpc_use_smb, options.auth_smb, options.hashes_smb, options.rpc_smb_port, options.icpr_ca_name)
         c.setMSSQLOptions(options.query)
@@ -329,6 +330,7 @@ if __name__ == '__main__':
     parser.add_argument('-of','--output-file', action='store',help='base output filename for encrypted hashes. Suffixes '
                                                                    'will be added for ntlm and ntlmv2')
     parser.add_argument('-dh','--dump-hashes', action='store_true', default=False, help='show encrypted hashes in the console')
+    parser.add_argument('--dump-lsa', action='store_true', default=False, help='Dump LSA secrets in addition to SAM hashes')
     parser.add_argument('-codec', action='store', help='Sets encoding used (codec) from the target\'s output (default '
                                                        '"%s"). If errors are detected, run chcp.com at the target, '
                                                        'map the result with '

