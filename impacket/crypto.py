@@ -315,6 +315,8 @@ def encryptSecret(key, value):
 
 def SamDecryptNTLMHash(encryptedHash, key):
     # [MS-SAMR] Section 2.2.11.1.1
+    if not key or len(key) < 14:
+        raise ValueError("Session key is missing or too short for DES encryption (expected at least 14 bytes, got %s)" % (len(key) if key else 0))
     Block1 = encryptedHash[:8]
     Block2 = encryptedHash[8:]
 
@@ -333,6 +335,8 @@ def SamDecryptNTLMHash(encryptedHash, key):
 
 def SamEncryptNTLMHash(encryptedHash, key):
     # [MS-SAMR] Section 2.2.11.1.1
+    if not key or len(key) < 14:
+        raise ValueError("Session key is missing or too short for DES encryption (expected at least 14 bytes, got %s)" % (len(key) if key else 0))
     Block1 = encryptedHash[:8]
     Block2 = encryptedHash[8:]
 

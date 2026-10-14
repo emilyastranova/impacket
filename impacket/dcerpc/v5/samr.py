@@ -2992,6 +2992,10 @@ def hSamrSetPasswordInternal4New(dce, userHandle, password):
     pwdbuff += struct.pack('<I', bufflen)
     salt = os.urandom(16)
     session_key = dce.get_rpc_transport().get_smb_connection().getSessionKey()
+    if isinstance(session_key, str):
+        session_key = session_key.encode('latin-1')
+    if not session_key or len(session_key) < 16:
+        raise DCERPCException("SMB session key is missing or too short (%s bytes). Cannot encrypt password for UserInternal4InformationNew." % (len(session_key) if session_key else 0))
     keymd = md5()
     keymd.update(salt)
     keymd.update(session_key)
@@ -3021,6 +3025,10 @@ def hSamrSetNTInternal1(dce, userHandle, password, hashNT=''):
             pass
 
     session_key = dce.get_rpc_transport().get_smb_connection().getSessionKey()
+    if isinstance(session_key, str):
+        session_key = session_key.encode('latin-1')
+    if not session_key or len(session_key) < 14:
+        raise DCERPCException("SMB session key is missing or too short (%s bytes). Cannot encrypt password for UserInternal1Information." % (len(session_key) if session_key else 0))
 
     request['Buffer']['Internal1']['EncryptedNtOwfPassword'] = crypto.SamEncryptNTLMHash(hashNT, session_key)
     request['Buffer']['Internal1']['EncryptedLmOwfPassword'] = NULL
